@@ -11,3 +11,6 @@
 /target/
 /src/main/native/sais/build/
 /src/main/native/include/
+out/artifacts/spark_bwt_jar/*.jar
+out/
+*.jar
