@@ -1,4 +1,4 @@
-# SparkBWT
+# SparkBWT_v2
 
 ## About the project
 SparkBWT is a tool for calculating the Burrows-Wheeler transform (BWT) on Apache Spark Framework.
