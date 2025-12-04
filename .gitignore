@@ -14,3 +14,5 @@
 out/artifacts/spark_bwt_jar/*.jar
 out/
 *.jar
+out/
+*.jar
