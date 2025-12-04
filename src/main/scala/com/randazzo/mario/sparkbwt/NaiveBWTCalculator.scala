@@ -9,11 +9,11 @@ import org.apache.spark.{Partitioner, RangePartitioner}
 import scala.io.{BufferedSource, Source}
 
 abstract class NaiveBWTCalculator(session: SparkSession,
-                             verbose: Boolean,
-                             inputFilePath: String,
-                             outputFilePath: String,
-                             k: Int)
-    extends BWTCalculator(session, verbose, inputFilePath, outputFilePath) {
+                                  verbose: Boolean,
+                                  inputFilePath: String,
+                                  outputFilePath: String,
+                                  k: Int)
+  extends BWTCalculator(session, verbose, inputFilePath, outputFilePath) {
 
     var bS: Broadcast[String] = _
     var primitives: NaivePrimitives = _
@@ -28,21 +28,20 @@ abstract class NaiveBWTCalculator(session: SparkSession,
         primitives = new NaivePrimitives(k, bS)
 
         val kmers: RDD[(String, Int)] = sc
-            .parallelize(0 until inputStringLength)
-            .map(primitives.getKMer)
+          .parallelize(0 until inputStringLength)
+          .map(primitives.getKMer)
 
         val partitioner: Partitioner = new RangePartitioner[String, Int](sc.defaultParallelism, kmers)
 
         val sortedIndices = kmers.partitionBy(partitioner)
-            .map { case (_, i) => i }
-            .mapPartitions(getSortPartitionMethod)
-
+          .map { case (_, i) => i }
+          .mapPartitions(getSortPartitionMethod)
         sortedIndices.map(primitives.previous)
-            .saveAsHadoopFile[BWTOutputFormat](outputFilePath)
-
+          //.saveAsHadoopFile[BWTOutputFormat](outputFilePath)
+          .coalesce(1).saveAsHadoopFile[BWTOutputFormat](outputFilePath)
+        //.coalesce(1).saveAsTextFile(outputFilePath)  //era come la riga precedente, coalesce solo per capire l'output su stringa  piccola
         bS.destroy()
     }
 
     def getSortPartitionMethod: Iterator[Int] => Iterator[Int]
 }
-

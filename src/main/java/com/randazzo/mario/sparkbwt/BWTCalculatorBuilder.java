@@ -27,6 +27,9 @@ public class BWTCalculatorBuilder {
     private int k;
     private CalculatorType type;
     private boolean verbose;
+    private SparkSession session;
+
+
 
     /**
      * Build a Builder for {@code BWTCalculator} class from the input file specified.
@@ -36,19 +39,12 @@ public class BWTCalculatorBuilder {
      */
     public BWTCalculatorBuilder(String inputFilePath) throws IllegalArgumentException {
         inputFile = new File(inputFilePath);
-
-        /*if (!inputFile.isFile())
-            throw new IllegalArgumentException("File " + inputFilePath + " is not valid file!");
-*/
         this.inputFilePath = inputFilePath;
         this.outputFilePath = inputFilePath + ".bwt";
         this.workingDirectory = "";
-        //this.startIdx = 0;
-        //this.endIdx = -1;
         this.k = 3;
         this.type = CalculatorType.ITERATIVE;
         this.verbose = false;
-
         LOG.info("Initialized builder for: " + inputFilePath);
     }
 
@@ -68,6 +64,13 @@ public class BWTCalculatorBuilder {
 
         LOG.info("Setting working directory: " + workingDirectory);
     }
+    public BWTCalculatorBuilder setSession(SparkSession session) {
+        this.session = session;
+        return this;
+    }
+
+
+
 
     /**
      * Set the output file path.
@@ -158,15 +161,20 @@ public class BWTCalculatorBuilder {
      * @return a {@code BWTCalculator} built from the option specified.
      */
     public BWTCalculator build() {
-        SparkSession session = new SparkSession.Builder()
+        if (session == null) {
+            throw new IllegalStateException("SparkSession is not initialized. Call setSession() first.");
+        }
+
+        /*SparkSession session = new SparkSession.Builder()
                 .appName(String.format(
                         "SparkBWT[%s] - %s",
                         this.type,
                         lastOf(inputFilePath.split("[\\\\/]"))
                 ))
                 .config("spark.hadoop.validateOutputSpecs", false)
-                //.master("local[*]")
-                .getOrCreate();
+                .master("yarn")
+                .getOrCreate();*/
+        String outputPath = Paths.get(workingDirectory, outputFilePath).toString();
 
         SparkContext sc = session.sparkContext();
 

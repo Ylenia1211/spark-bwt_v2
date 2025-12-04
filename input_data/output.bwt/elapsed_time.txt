@@ -1,0 +1,2 @@
+Elapsed time: 7072 ms
+Memory used: 270 MB

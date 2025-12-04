@@ -25,6 +25,7 @@ public class SparkBWTCli {
     private static final String K_LENGTH_OPT = "k";
     private static final String TYPE_OPT = "t";
     private static final String VERBOSE_OPT = "v";
+    private static final String MASTER_OPT = "m";
 
     private boolean help;
 
@@ -35,6 +36,9 @@ public class SparkBWTCli {
     public SparkBWTCli() {
     }
 
+    public BWTCalculatorBuilder getBWTCalculatorBuilder() {
+        return this.bwtCalculatorBuilder;
+    }
     /**
      * Parse and set up the option parameters from the args passed by parameter.
      * Must be called after the constructor!
@@ -68,6 +72,15 @@ public class SparkBWTCli {
                 .argName("index")
                 .build();
         opts.addOption(startIndexOpt);*/
+
+        /*Option masterOpt = Option.builder(MASTER_OPT)
+                .longOpt("master")
+                .hasArg(true)
+                .required(false)
+                .desc("Specify Spark master (e.g., local[*], yarn, spark://host:port). Default is local[*].")
+                .argName("spark-master")
+                .build();
+        opts.addOption(masterOpt);*/
 
         Option directoryOpt = Option.builder(DIRECTORY_OPT)
                 .longOpt("directory")
@@ -212,6 +225,11 @@ public class SparkBWTCli {
      */
     public boolean isHelp() {
         return help;
+    }
+
+
+    public String getMaster() {
+        return cmd.hasOption(MASTER_OPT) ? cmd.getOptionValue(MASTER_OPT) : null;
     }
 
 
