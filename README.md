@@ -27,7 +27,7 @@ For building in Windows environment you have to use MinGW and [CMake](https://cm
 ### Build
 To build the project from command line:
 	
-    git clone https://github.com/MR6996/spark-bwt
+    git clone 
     cd spark-bwt
     mvn package -P [profile]
 
@@ -50,4 +50,3 @@ for help:
   The project is distributed under GPL v.3 License [More info](LICENSE.md)
   
 ## References
-  [1] **Mario Randazzo, Simona E. Rombo** [A Big Data Approach for Sequences Indexing on the Cloud via Burrows Wheeler Transform](https://arxiv.org/abs/2007.10095)
